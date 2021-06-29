@@ -122,6 +122,10 @@ class LaneDetector:
         # Line filter
         self.line_filter_values = _compute_line_filter_values(n_cols)
 
+        # Buffers
+        self.lines_left_buffer = deque(maxlen = buffer_size)
+        self.lines_right_buffer = deque(maxlen = buffer_size)
+
     def detect(self, image):
 
         gamma_image = cv2.LUT(image, self.table)
@@ -163,11 +167,23 @@ class LaneDetector:
 
         if len(lines_left) > 0:
             line_left = np.mean(lines_left, axis = 0)
+
+            # If buffer_size = 0, no buffering happens
+            self.lines_left_buffer.append(line_left)
+            if len(self.lines_left_buffer) > 0:
+                line_left = np.average(self.lines_left_buffer, axis = 0)
+
             draw_line(tmp, line_left)
 
 
         if len(lines_right) > 0:
             line_right = np.mean(lines_right, axis = 0)
+
+            # If buffer_size = 0, no buffering happens
+            self.lines_right_buffer.append(line_right)
+            if len(self.lines_right_buffer) > 0:
+                line_right = np.average(self.lines_right_buffer, axis = 0)
+
             draw_line(tmp, line_right)
 
         lines_image = cv2.addWeighted(image, 0.8, tmp, 1.0, 0.0)
