@@ -166,11 +166,12 @@ if __name__ == "__main__":
 
         images, file_names = glob_images(folder_path_images)
 
-        n_rows, n_cols, n_channels = images[0].shape
+        n_rows, n_cols, _ = images[0].shape
 
         n_images = len(images)
 
-        images_results = np.zeros((n_images, n_rows, n_cols, n_channels), dtype = np.uint8)
+        # Grayscale
+        images_results = np.zeros((n_images, n_rows, n_cols), dtype = np.uint8)
 
         lane_detector = LaneDetector(n_rows, n_cols, config)
 
