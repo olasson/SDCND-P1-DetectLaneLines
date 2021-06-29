@@ -165,25 +165,30 @@ class LaneDetector:
 
         tmp = np.zeros_like(image)
 
+        line_left = None
+
         if len(lines_left) > 0:
             line_left = np.mean(lines_left, axis = 0)
 
-            # If buffer_size = 0, no buffering happens
             self.lines_left_buffer.append(line_left)
-            if len(self.lines_left_buffer) > 0:
-                line_left = np.average(self.lines_left_buffer, axis = 0)
 
+        if len(self.lines_left_buffer) > 0:
+            line_left = np.average(self.lines_left_buffer, axis = 0)
+
+        if line_left is not None:
             draw_line(tmp, line_left)
 
+        line_right = None
 
         if len(lines_right) > 0:
             line_right = np.mean(lines_right, axis = 0)
 
-            # If buffer_size = 0, no buffering happens
             self.lines_right_buffer.append(line_right)
-            if len(self.lines_right_buffer) > 0:
-                line_right = np.average(self.lines_right_buffer, axis = 0)
 
+        if len(self.lines_right_buffer) > 0:
+            line_right = np.average(self.lines_right_buffer, axis = 0)
+
+        if line_left is not None:
             draw_line(tmp, line_right)
 
         lines_image = cv2.addWeighted(image, 0.8, tmp, 1.0, 0.0)
