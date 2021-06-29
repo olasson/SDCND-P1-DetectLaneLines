@@ -1,0 +1,6 @@
+*.pyc
+data/*
+config/*
+images/*
+videos/*
+test.py
