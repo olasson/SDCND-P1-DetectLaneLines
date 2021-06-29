@@ -27,16 +27,23 @@ class LaneDetector:
         self.table = _compute_lut_table(config["gamma"])
 
         # HLS colors
-        self.hls_lower1 = np.array(config["hls_lower1"])
-        self.hls_upper1 = np.array(config["hls_upper1"])
-        self.hls_lower2 = np.array(config["hls_lower2"])
-        self.hls_upper2 = np.array(config["hls_upper2"])
+        self.hls_lower1 = np.array(config["hls_white_lower1"])
+        self.hls_upper1 = np.array(config["hls_white_upper1"])
+        self.hls_lower2 = np.array(config["hls_yellow_lower2"])
+        self.hls_upper2 = np.array(config["hls_yellow_upper2"])
+
+        self.kernel = config["gaussian_kernel"]
 
 
     def detect(self, image):
 
         gamma_image = cv2.LUT(image, self.table.astype('uint8'))
 
-        masked_color_image = mask_hls_colors(gamma_image, self.hls_lower1, self.hls_upper1, self.hls_lower2, self.hls_upper2)
+        masked_color_image = mask_hls_colors(gamma_image, self.hls_lower1, self.hls_upper1, 
+                                                          self.hls_lower2, self.hls_upper2)
 
-        return masked_color_image
+        grayscale_image = cv2.cvtColor(masked_color_image, cv2.COLOR_BGR2GRAY)
+
+        blurred_image = cv2.GaussianBlur(grayscale_image, (self.kernel, self.kernel), 0)
+
+        return blurred_image
