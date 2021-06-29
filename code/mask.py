@@ -35,3 +35,28 @@ def mask_hls_colors(image, hls_lower1, hls_upper1, hls_lower2, hls_upper2):
     masked_image = cv2.bitwise_and(image, image, mask = mask)
     
     return masked_image
+
+def mask_region(grayscale_image, region):
+    """
+    Mask a region in an image
+    
+    Inputs
+    ----------
+    grayscale_image : numpy.ndarray
+        Numpy array containing a single grayscale image
+    region: numpy.ndarray
+        Numpy array containing the points that define the region of interest
+    Outputs
+    -------
+    masked_image: numpy.ndarray
+        Image with region mask applied
+        
+    """
+    
+    mask = np.zeros_like(grayscale_image)
+    
+    cv2.fillPoly(mask, region, 255)
+    
+    masked_image = cv2.bitwise_and(grayscale_image, mask)
+    
+    return masked_image
