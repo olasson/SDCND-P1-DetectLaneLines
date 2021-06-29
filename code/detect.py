@@ -15,7 +15,7 @@ from code.draw import draw_line
 
 def _compute_lut_table(gamma):
     """
-    Compute the region of interest
+    Compute LUT table for gamma correction
     
     Inputs
     ----------
