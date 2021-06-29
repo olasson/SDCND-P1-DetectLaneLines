@@ -83,16 +83,6 @@ if __name__ == "__main__":
         help = 'The fps of the output video'
     )
 
-    # Config
-
-    parser.add_argument(
-        '--config',
-        type = str,
-        nargs = '?',
-        default = './config/config1.json',
-        help = 'Path to a .json file containing project config.',
-    )
-
     # Misc
 
     parser.add_argument(
@@ -105,16 +95,10 @@ if __name__ == "__main__":
 
     # Init paths
 
-    file_path_config = args.config
-
     folder_path_images = args.images
 
     file_path_video_input = args.video_in
     file_path_video_output = args.video_out
-
-    # Init config
-
-    config = load_config(file_path_config)
 
     # Init values
 
@@ -173,7 +157,7 @@ if __name__ == "__main__":
         # Grayscale
         images_results = np.zeros((n_images, n_rows, n_cols), dtype = np.uint8)
 
-        lane_detector = LaneDetector(n_rows, n_cols, config)
+        lane_detector = LaneDetector(n_rows, n_cols)
 
         for i in range(n_images):   
 
