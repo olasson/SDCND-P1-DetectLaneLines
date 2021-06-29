@@ -154,7 +154,7 @@ if __name__ == "__main__":
         # Grayscale
         images_results = np.zeros((n_images, n_rows, n_cols, n_channels), dtype = np.uint8)
 
-        lane_detector = LaneDetector(n_rows, n_cols)
+        lane_detector = LaneDetector(n_rows, n_cols, buffer_size = 0)
 
         for i in range(n_images):   
 
@@ -181,6 +181,8 @@ if __name__ == "__main__":
 
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         out = cv2.VideoWriter(file_path_video_output, fourcc, fps, tuple(args.frame_size))
+
+        lane_detector = LaneDetector(n_rows, n_cols)
         
         i = 0
 
@@ -189,11 +191,12 @@ if __name__ == "__main__":
             ret, frame = cap.read()
 
             if ret:
+                processed_frame = lane_detector.detect(frame)
                 
                 i = i + 1
                 print(INFO_PREFIX + 'Frame ' + str(i) + '/' + str(n_frames))
                 
-                out.write(frame)
+                out.write(processed_frame)
             else:
                 break
 
