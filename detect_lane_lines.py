@@ -104,9 +104,6 @@ if __name__ == "__main__":
 
     n_max_cols = args.n_max_cols
 
-    n_rows = args.frame_size[1]
-    n_cols = args.frame_size[0]
-
     fps = args.fps
 
     # Init flags
@@ -150,12 +147,12 @@ if __name__ == "__main__":
 
         images, file_names = glob_images(folder_path_images)
 
-        n_rows, n_cols, _ = images[0].shape
+        n_rows, n_cols, n_channels = images[0].shape
 
         n_images = len(images)
 
         # Grayscale
-        images_results = np.zeros((n_images, n_rows, n_cols), dtype = np.uint8)
+        images_results = np.zeros((n_images, n_rows, n_cols, n_channels), dtype = np.uint8)
 
         lane_detector = LaneDetector(n_rows, n_cols)
 
@@ -175,6 +172,8 @@ if __name__ == "__main__":
 
         print(INFO_PREFIX + 'Running pipeline on video: ' + file_path_video_input)
 
+        n_rows = args.frame_size[1]
+        n_cols = args.frame_size[0]
 
         cap = cv2.VideoCapture(file_path_video_input)
 

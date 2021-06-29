@@ -5,6 +5,7 @@ from collections import deque
 # Custom imports
 from code.mask import mask_hls_colors, mask_region
 from code.lines import line_slope, line_extend, line_is_lane_line
+from code.draw import draw_line
 
 # Helpers
 
@@ -47,14 +48,45 @@ def _compute_region_of_interest(n_rows, n_cols, cols_scale = 0.08, rows_scale = 
                                     ((1 - cols_scale) * n_cols, (1 - cols_scale) * n_rows)]], dtype = np.int32)
     return region_of_interest
 
+def _compute_line_filter_values(n_cols, 
+                               left_min_scale = 0.10, left_max_scale = 0.35,
+                               right_min_scale = 0.70, right_max_scale = 0.95,
+                               line_angle_min = 15.00, line_angle_max = 55.00):
+
+    """
+    Compute line filter min/max values
+    
+    Inputs
+    ----------
+    n_cols: int
+        Number of columns in the image/frame
+    left_min_scale/left_max_scale: float/float
+        Scalar determining the leftmost min/max allowed values in the x-dir
+    right_min_scale/right_max_scale: float/float
+        Scalar determining the rightmost min/max allowed values in the x-dir
+    line_angle_min/line_angle_max: float/float
+        Min/max allowed value of the line angle
+        
+    Outputs
+    -------
+    line_filter_values: numpy.ndarray
+        Numpy array containing line filter values
+    """
+
+    left_min = left_min_scale * n_cols
+    left_max = left_max_scale * n_cols
+    right_min = right_min_scale * n_cols
+    right_max = right_max_scale * n_cols
+
+    line_filter_values = np.array([left_min, left_max, right_min, right_max, line_angle_min, line_angle_max])
+
+    return line_filter_values
+
 # Lane detector
 
 class LaneDetector:
 
     def __init__(self, n_rows, n_cols, buffer_size = 8):
-        
-        #self.n_rows = n_rows
-        #self.n_cols = n_cols
 
         # Gamma correction table
         gamma = 2.1
@@ -82,7 +114,13 @@ class LaneDetector:
         self.min_number_of_votes = np.array([10, 10, 10, 10, 20, 30, 40, 50])
         self.max_line_gaps = np.array([100, 20, 40, 60, 80, 100, 200, 300])
         self.min_line_lengths = np.array([5, 10, 30, 40, 50, 60, 70, 80])
-        
+
+        # Line extension parameters
+        self.y_bottom = 1.00 * n_rows
+        self.y_top = 0.60 *n_rows
+
+        # Line filter
+        self.line_filter_values = _compute_line_filter_values(n_cols)
 
     def detect(self, image):
 
@@ -98,5 +136,40 @@ class LaneDetector:
         edges_image = cv2.Canny(blurred_image, self.canny_low, self.canny_high)
 
         masked_edges = mask_region(edges_image, self.region)
+        
+        lines_left = []
+        lines_right = []  
+        
+        for i in range(len(self.min_number_of_votes)):
 
-        return masked_edges
+                lines = cv2.HoughLinesP(masked_edges, self.resolution_distance, self.resolution_angular, 
+                                        self.min_number_of_votes[i], np.array([]), self.min_line_lengths[i], self.max_line_gaps[i])
+
+                if lines is not None:
+                    for line in lines:
+
+                        extended_line = line_extend(line, self.y_bottom, self.y_top)
+
+                        if line_is_lane_line(extended_line, self.line_filter_values):
+
+                            slope = line_slope(extended_line)
+
+                            if slope < 0:
+                                lines_left.append(extended_line)
+                            else:
+                                lines_right.append(extended_line)
+
+        tmp = np.zeros_like(image)
+
+        if len(lines_left) > 0:
+            line_left = np.mean(lines_left, axis = 0)
+            draw_line(tmp, line_left)
+
+
+        if len(lines_right) > 0:
+            line_right = np.mean(lines_right, axis = 0)
+            draw_line(tmp, line_right)
+
+        lines_image = cv2.addWeighted(image, 0.8, tmp, 1.0, 0.0)
+
+        return lines_image
