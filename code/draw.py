@@ -1,3 +1,6 @@
+"""
+This file contains some simple functions for drawing lines
+"""
 
 import cv2
 

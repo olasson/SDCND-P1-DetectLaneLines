@@ -12,7 +12,6 @@ from os.path import join as path_join
 # Custom imports
 from code.misc import parse_file_path
 
-
 # Wrappers
 
 def save_image(file_path, image):
@@ -66,29 +65,6 @@ def _load_images(file_paths):
 
     return images, file_names
 
-# Config
-
-def load_config(file_path):
-    """
-    Check if a file exists
-    
-    Inputs
-    ----------
-    file_path: str
-        Path to a .json file.
-       
-    Outputs
-    -------
-    config: dict
-        Dictionary containing the config from file_path.
-        
-    """
-    
-    with open(file_path) as f:
-        config = json.load(f)
-
-    return config
-
 # Glob
 
 def glob_file_paths(folder_path, n_max_samples = None, file_ext = '.png'):
@@ -107,7 +83,8 @@ def glob_file_paths(folder_path, n_max_samples = None, file_ext = '.png'):
        
     Outputs
     -------
-
+    file_paths: numpy.ndarray
+        Numpy array containing the file paths matching with 'file_ext' in 'folder_path'.
         
     """
 
@@ -140,7 +117,10 @@ def glob_images(folder_path, n_max_images = 50):
        
     Outputs
     -------
-
+    images: numpy.ndarray
+        Numpy array containing the images found in 'folder_path'.
+    file_names: numpy.ndarray
+        Numpy array containing the file names (not full paths) of the file paths found ing 'folder_path.
         
     """
     file_paths = glob_file_paths(folder_path, n_max_samples = 50, file_ext = '.png')
@@ -151,58 +131,6 @@ def glob_images(folder_path, n_max_images = 50):
     images, file_names = _load_images(file_paths)
 
     return images, file_names
-
-# Pickled
-
-def save_pickled_data(file_path, data1, data2, key1 = 'key1', key2 = 'key2'):
-    """
-    Save two data files as a single pickled (.p) file. 
-    
-    Inputs
-    ----------
-    file_path: str
-        File path to a pickled file - './path/to/myfile.p'
-    data1,data2: numpy.ndarray, numpy.ndarray
-        Numpy arrays containing data.
-    key1, key2: str, str
-        Dictionary keys.
-       
-    Outputs
-    -------
-        N/A
-
-    """
-
-    data = {key1: data1, key2: data2} 
-
-    with open(file_path, mode = 'wb') as f:   
-        pickle.dump(data, f, protocol = pickle.HIGHEST_PROTOCOL)
-
-def load_pickled_data(file_path, key1 = 'key1', key2 = 'key2'):
-    """
-    Load a single pickled (.p) file into two numpy arrays.
-    
-    Inputs
-    ----------
-    file_path: str
-        File path to a pickled file - './path/to/myfile.p'
-    key1, key2: str, str
-        Dictionary keys.
-       
-    Outputs
-    -------
-    data1,data2: numpy.ndarray, numpy.ndarray
-        Numpy arrays containing data.
-
-    """
-
-    with open(file_path, mode = 'rb') as f:
-        data = pickle.load(f)
-
-    data1 = data[key1]
-    data2 = data[key2]
-
-    return data1, data2
 
 
 

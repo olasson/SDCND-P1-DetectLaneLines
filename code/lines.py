@@ -11,7 +11,7 @@ def line_slope(line):
     Inputs
     ----------
     line : numpy.ndarray
-        Array containing a single line - [[x1, y1, x2, y2]]
+        Numpy array containing a single line - [[x1, y1, x2, y2]]
     Outputs
     -------
     slope: float
@@ -36,7 +36,7 @@ def line_angle(line):
     Inputs
     ----------
     line : numpy.ndarray
-        Array containing a single line - [[x1, y1, x2, y2]]
+        Numpy array containing a single line - [[x1, y1, x2, y2]]
     Outputs
     -------
     theta: float
@@ -56,7 +56,7 @@ def line_solve_for_x(line, y):
     Inputs
     ----------
     line : numpy.ndarray
-        Array containing a single line - [[x1, y1, x2, y2]]
+        Numpy array containing a single line - [[x1, y1, x2, y2]]
     y: float
         Known y-coordinate of the point (x,y) which lies on 'line'
         
@@ -77,17 +77,17 @@ def line_solve_for_x(line, y):
 def line_extend(line, y_bottom, y_top):
     """
     Extend line by finding new points
-    
+
     Inputs
     ----------
     line : numpy.ndarray
-        Array containing a single line - [[x1, y1, x2, y2]]
+        Numpy array containing a single line - [[x1, y1, x2, y2]]
     y_bottom, y_top: float, float
         Known y-coordinates of the extended line
     Outputs
     -------
     line_extended: numpy.ndarray
-        Array containing an extended line
+        Numpy array containing an extended line
     """   
 
     x_bottom = line_solve_for_x(line, y_bottom)
@@ -105,6 +105,7 @@ def line_is_lane_line(line, line_filter_values):
     ----------
     line_filter_values : numpy.ndarray
         Numpy array containing 3 pairs of min/max filter values
+        See _compute_line_filter_values() in detect.py.
         
     Outputs
     -------
@@ -112,8 +113,6 @@ def line_is_lane_line(line, line_filter_values):
         'True' if line is acceptable, 'False' otherwise
         
     """
-
-
 
     horizontal_filter = ((line_filter_values[0] <= line[0][0] <= line_filter_values[1]) or
                          (line_filter_values[2] <= line[0][0] <= line_filter_values[3]))

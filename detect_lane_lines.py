@@ -1,3 +1,6 @@
+"""
+This file contains the main script
+"""
 
 import cv2
 import numpy as np

@@ -1,5 +1,5 @@
 """
-This file contains some basic image operations used in the pipeline. 
+This file contains some basic image masking used in the pipeline.
 """
 
 import cv2

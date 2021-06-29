@@ -2,7 +2,6 @@
 This file contains function(s) for visualizing data.
 """
 
-
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt

@@ -4,7 +4,6 @@ This file contains some miscellaneous helper functions and os wrappers.
 
 import os
 
-
 def file_exists(file_path):
     """
     Check if a file exists.
@@ -43,6 +42,7 @@ def folder_guard(folder_path):
         N/A
         
     """
+    
     if not os.path.isdir(folder_path):
         print('INFO:folder_guard(): Creating folder: ' + folder_path + '...')
         os.mkdir(folder_path)
