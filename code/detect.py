@@ -3,7 +3,7 @@ import numpy as np
 from collections import deque
 
 # Custom imports
-from code.process import mask_hls_colors
+from code.mask import mask_hls_colors
 
 # Helpers
 
