@@ -192,9 +192,10 @@ if __name__ == "__main__":
 
             if ret:
                 processed_frame = lane_detector.detect(frame)
-                
+
                 i = i + 1
-                print(INFO_PREFIX + 'Frame ' + str(i) + '/' + str(n_frames))
+                if i % 10 == 0:
+                    print(INFO_PREFIX + 'Frame ' + str(i) + '/' + str(n_frames))
                 
                 out.write(processed_frame)
             else:
@@ -203,6 +204,7 @@ if __name__ == "__main__":
         cap.release()
         out.release()
 
+        print(INFO_PREFIX + 'Frame ' + str(i) + '/' + str(n_frames))
         print('Done processing video!')
         print('Number of frames successfully processed: ', i)
         print('Result is found here: ', file_path_video_output)
