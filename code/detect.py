@@ -13,7 +13,7 @@ def _compute_lut_table(gamma):
     for i in np.arange(0, 256):
         table[i] = ((i / 255.0) ** gamma) * 255.0
 
-    table = np.uint8(table)
+    #table = np.uint8(table)
 
     return table
 
@@ -26,9 +26,17 @@ class LaneDetector:
 
         self.table = _compute_lut_table(config["gamma"])
 
+        # HLS colors
+        self.hls_lower1 = np.array(config["hls_lower1"])
+        self.hls_upper1 = np.array(config["hls_upper1"])
+        self.hls_lower2 = np.array(config["hls_lower2"])
+        self.hls_upper2 = np.array(config["hls_upper2"])
+
 
     def detect(self, image):
 
-        gamma_image = cv2.LUT(image, self.table)
+        gamma_image = cv2.LUT(image, self.table.astype('uint8'))
 
-        return gamma_image
+        masked_color_image = mask_hls_colors(gamma_image, self.hls_lower1, self.hls_upper1, self.hls_lower2, self.hls_upper2)
+
+        return masked_color_image
