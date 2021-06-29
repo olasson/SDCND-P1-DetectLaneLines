@@ -8,6 +8,7 @@ from os.path import join as path_join
 from code.misc import file_exists, folder_guard, folder_is_empty, parse_file_path
 from code.io import load_config, glob_images
 from code.plots import plot_images
+from code.detect import LaneDetector
 
 FOLDER_DATA = './data'
 
@@ -169,13 +170,15 @@ if __name__ == "__main__":
 
         n_images = len(images)
 
-        images_result = np.zeros((n_images, n_rows, n_cols, n_channels), dtype = np.uint8)
+        images_results = np.zeros((n_images, n_rows, n_cols, n_channels), dtype = np.uint8)
+
+        lane_detector = LaneDetector(n_rows, n_cols, config)
 
         for i in range(n_images):   
-            # Fill in a proper pipeline function here
-            images_result[i] = images[i]
 
-        plot_images(images, file_names, title_fig_window = folder_path_images, n_max_cols = n_max_cols)
+            images_results[i] = lane_detector.detect(images[i])
+
+        plot_images(images_results, file_names, title_fig_window = folder_path_images, n_max_cols = n_max_cols)
     
     # Run on video
 
