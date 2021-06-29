@@ -6,7 +6,7 @@ from os.path import join as path_join
 
 # Custom imports
 from code.misc import file_exists, folder_guard, folder_is_empty, parse_file_path
-from code.io import load_config, glob_images
+from code.io import load_config, glob_images, save_image
 from code.plots import plot_images
 from code.detect import LaneDetector
 
@@ -24,7 +24,7 @@ if __name__ == "__main__":
     # Images
 
     parser.add_argument(
-        '--images',
+        '--images_in',
         type = str,
         nargs = '?',
         default = '',
@@ -32,15 +32,23 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
+        '--images_out',
+        type = str,
+        nargs = '?',
+        default = './images/results',
+        help = 'Folder path to where pipeline results from --images_in will be stored.'
+    )
+
+    parser.add_argument(
         '--run',
         action = 'store_true',
-        help = 'Run the pipeline on a set of provided by --images.'
+        help = 'Run the pipeline on a set of provided by --images_in.'
     )
 
     parser.add_argument(
         '--show',
         action = 'store_true',
-        help = 'Shows a set or subset of images provided by --images.'
+        help = 'Shows a set or subset of images provided by --images_in.'
     )
 
     parser.add_argument(
@@ -95,7 +103,8 @@ if __name__ == "__main__":
 
     # Init paths
 
-    folder_path_images = args.images
+    folder_path_images_in = args.images_in
+    folder_path_images_out = args.images_out
 
     file_path_video_input = args.video_in
     file_path_video_output = args.video_out
@@ -123,15 +132,15 @@ if __name__ == "__main__":
 
     if flag_show_images:
 
-        if folder_is_empty(folder_path_images):
-            print(ERROR_PREFIX + 'You are trying to show a set of images but ' + folder_path_images + ' is empty or does not exist!')
+        if folder_is_empty(folder_path_images_in):
+            print(ERROR_PREFIX + 'You are trying to show a set of images but ' + folder_path_images_in + ' is empty or does not exist!')
             exit()
 
-        print(INFO_PREFIX + 'Showing images from folder: ' + folder_path_images)
+        print(INFO_PREFIX + 'Showing images from folder: ' + folder_path_images_in)
 
-        images, file_names = glob_images(folder_path_images)
+        images, file_names = glob_images(folder_path_images_in)
 
-        plot_images(images, file_names, title_fig_window = folder_path_images, n_max_cols = n_max_cols)
+        plot_images(images, file_names, title_fig_window = folder_path_images_in, n_max_cols = n_max_cols)
 
         exit()
 
@@ -139,13 +148,17 @@ if __name__ == "__main__":
 
     if flag_run_on_images:
 
-        if folder_is_empty(folder_path_images):
-            print(ERROR_PREFIX + 'You are trying to run the pipeline on a set ofimages but ' + folder_path_images + ' is empty or does not exist!')
+        if folder_is_empty(folder_path_images_in):
+            print(ERROR_PREFIX + 'You are trying to run the pipeline on a set of images but ' + folder_path_images_in + ' is empty or does not exist!')
             exit()
 
-        print(INFO_PREFIX + 'Running pipeline on images in folder: ' + folder_path_images)
+        if not folder_is_empty(folder_path_images_out):
+            print(WARNING_PREFIX + 'The folder ' + folder_path_images_out + ' is not empty! Use --force_save to overwrite its contents.')
+            exit()
 
-        images, file_names = glob_images(folder_path_images)
+        print(INFO_PREFIX + 'Running pipeline on images in folder: ' + folder_path_images_in)
+
+        images, file_names = glob_images(folder_path_images_in)
 
         n_rows, n_cols, n_channels = images[0].shape
 
@@ -160,7 +173,9 @@ if __name__ == "__main__":
 
             images_results[i] = lane_detector.detect(images[i])
 
-        plot_images(images_results, file_names, title_fig_window = folder_path_images, n_max_cols = n_max_cols)
+            save_image(path_join(folder_path_images_out, file_names[i]), images_results[i])
+
+        plot_images(images_results, file_names, title_fig_window = folder_path_images_in, n_max_cols = n_max_cols)
     
     # Run on video
 
