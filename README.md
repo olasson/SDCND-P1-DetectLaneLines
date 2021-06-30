@@ -62,7 +62,7 @@ My pipeline can be divided into three main parts, detailed below.
 
 ### Part 1: Prepare image for line extraction
 
-1. Apply a gamma correction to darken the immage. For the pipeline, a value of `gamma = 2.1` was used to darken the image and make the color masking more effective. 
+1. Apply a gamma correction to darken the image. For the pipeline, a value of `gamma = 2.1` was used to darken the image and make the color masking more effective. 
 <p align="center">
   <img width="70%" height="70%" src="https://github.com/olasson/SDCND-P1-DetectLaneLines/blob/master/images/readme/step01_gamma.jpg">
 </p>
