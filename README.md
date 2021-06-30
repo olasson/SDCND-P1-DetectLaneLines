@@ -152,21 +152,21 @@ Finally, the mean of the left and right lines respectively is computed (if any l
 
 *The video results of the pipeline can be seen in the folder `test_videos_output`. Gifs versions of those videos are seen here.*
 
-<h3 align="center">Solid Yellow Right</h3>
+<h3 align="center">solidWhiteRight.mp4</h3>
 </header>
 
 <p align="center">
   <img width="70%" height="70%" src="https://github.com/olasson/SDCND-P1-DetectLaneLines/blob/master/videos/readme/solidWhiteRight.gif">
 </p>
 
-<h3 align="center">Solid Yellow Left</h3>
+<h3 align="center">solidYellowLeft.mp4</h3>
 </header>
 
 <p align="center">
   <img width="70%" height="70%" src="https://github.com/olasson/SDCND-P1-DetectLaneLines/blob/master/videos/readme/solidYellowLeft.gif">
 </p>
 
-<h3 align="center">Challenge</h3>
+<h3 align="center">challenge.mp4</h3>
 </header>
 
 <p align="center">
