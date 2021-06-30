@@ -22,7 +22,7 @@ ERROR_PREFIX = 'ERROR_MAIN: '
 if __name__ == "__main__":
 
 
-    parser = argparse.ArgumentParser(description = 'Project')
+    parser = argparse.ArgumentParser(description = 'Detect Lane Lines')
 
     # Images
 
