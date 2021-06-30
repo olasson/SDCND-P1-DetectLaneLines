@@ -120,7 +120,7 @@ Note that `region_of_interest` can vary since it is a function of `(n_rows, n_co
   <img width="70%" height="70%" src="https://github.com/olasson/SDCND-P1-DetectLaneLines/blob/master/images/readme/step06_region.jpg">
 </p>
 
-### Part 2: Extract, filter and draw lines
+### Part 2: Extract lines
 
 The first step is to apply a Hough Transform. The parameters are given by
             
@@ -143,6 +143,8 @@ Next, the accepted lines are sorted into right and left based on their slope lik
             lines_left.append(extended_line)
         else:
             lines_right.append(extended_line)
+
+### Part 3: Process extracted lines
 
 Finally, the mean of the left and right lines respectively is computed (if any lines were in fact found). They are added to their respective line buffer, and averaged if any values exists in the buffer. This provides both robustness and a smoother result in the video.
 
