@@ -70,10 +70,10 @@ My pipeline can be divided into three main parts, detailed below.
 2. Apply a color mask to the image, looking for white and yellow areas. Separating out white and yellow in RGB space can be difficult, which is why HLS space is used here. The HLS representation of white and yellow in used in this project is 
 
        ...
-       hls_lower1 = np.array([0, 200, 0]),     # HLS White
-       hls_upper1 = np.array([255, 255, 255]), # HSL White
-       hls_lower2 = np.array([10, 10, 150]),   # HLS Yellow
-       hls_upper2 = np.array([40, 255, 255]),  # HLS Yellow
+       self.hls_lower1 = np.array([0, 200, 0]),     # HLS White
+       self.hls_upper1 = np.array([255, 255, 255]), # HSL White
+       self.hls_lower2 = np.array([10, 10, 150]),   # HLS Yellow
+       self.hls_upper2 = np.array([40, 255, 255]),  # HLS Yellow
        ...
 
 
@@ -91,8 +91,8 @@ As one can see from the masked image, alot of unnecessary details are ignored du
 
 4. Apply Canny edge detection. The parameters used in the edge detection is
 
-        canny_low = 50
-        canny_high = 150
+        self.canny_low = 50
+        self.canny_high = 150
 
 The exact values of these thresholds came from experimentation, but I kept them at a 3:1 ratio as reccomended by Udacity in the course material.
 <p align="center">
@@ -125,11 +125,11 @@ Note that `region_of_interest` can vary since it is a function of `(n_rows, n_co
 The first step is to apply a Hough Transform. The parameters are given by
             
      ...
-     resolution_distance = 1, # [pixels]
-     resolution_angular = np.pi / 180, # [rad]
-     min_number_of_votes = np.array([10, 10, 10, 10, 20, 30, 40, 50]), # Must be of length 'n'
-     max_line_gaps = np.array([100, 20, 40, 60, 80, 100, 200, 300]), # Must be of length 'n'
-     min_line_lengths = np.array([5, 10, 30, 40, 50, 60, 70, 80]), # Must be of length 'n'
+     self.resolution_distance = 1, # [pixels]
+     self.resolution_angular = np.pi / 180, # [rad]
+     self.min_number_of_votes = np.array([10, 10, 10, 10, 20, 30, 40, 50])
+     self.max_line_gaps = np.array([100, 20, 40, 60, 80, 100, 200, 300])
+     self.min_line_lengths = np.array([5, 10, 30, 40, 50, 60, 70, 80])
      ...
         
  A `for-loop` then feeds one value of `min_number_of_votes`, `max_line_gaps` and `min_line_lengths` at a time to the Hough Transform, allowing the pipeline to test different combinations of parameters for every image, increasing the odds of detecting lines. If the line set returned is not empty, they are extended between two new points. 
